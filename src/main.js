@@ -933,7 +933,7 @@ TidyTree.prototype.setColorOptions = function (newColorOptions) {
     if (!newColorOptions.predicate) {
       console.warn('Warning: colorOptions.predicate not supplied');
     }
-    if (!newColorOptions.leavesOnly) {
+    if (newColorOptions.leavesOnly === undefined) {
       newColorOptions.leavesOnly = false;
       console.warn('Warning: colorOptions.leavesOnly not supplied and defaulted to false');
     }
