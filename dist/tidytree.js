@@ -3072,6 +3072,11 @@ var TidyTree = (function () {
             .attr("width", "25px")
             .attr("x", -25);
         }
+        // d3's axes only set the attributes their own orientation uses, and set
+        // text-anchor only on first use, so clear what's left from the other
+        // orientation (e.g. after a layout change)
+        ruler.selectAll(".tick, .domain").remove();
+        ruler.attr("text-anchor", this.layout == "horizontal" ? "middle" : "end");
         let axis = this.layout == "horizontal" ? d3.axisBottom() : d3.axisLeft();
         if (this.type === "tree" && this.layout !== "circular") {
           ruler
@@ -3181,7 +3186,7 @@ var TidyTree = (function () {
         if (!newColorOptions.predicate) {
           console.warn('Warning: colorOptions.predicate not supplied');
         }
-        if (!newColorOptions.leavesOnly) {
+        if (newColorOptions.leavesOnly === undefined) {
           newColorOptions.leavesOnly = false;
           console.warn('Warning: colorOptions.leavesOnly not supplied and defaulted to false');
         }
