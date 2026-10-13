@@ -3072,12 +3072,15 @@ var TidyTree = (function () {
             .attr("width", "25px")
             .attr("x", -25);
         }
-        // d3's axes only set the attributes their own orientation uses, and set
-        // text-anchor only on first use, so clear what's left from the other
-        // orientation (e.g. after a layout change)
-        ruler.selectAll(".tick, .domain").remove();
-        ruler.attr("text-anchor", this.layout == "horizontal" ? "middle" : "end");
         let axis = this.layout == "horizontal" ? d3.axisBottom() : d3.axisLeft();
+        let orient = this.layout == "horizontal" ? "bottom" : "left";
+        if (ruler.attr("data-orient") !== orient) {
+          // d3-axis only sets tick line/text attributes and the group's
+          // text-anchor when its elements are first created, so clear the
+          // previous axis before switching between axisLeft and axisBottom.
+          ruler.selectAll(".tick, .domain").remove();
+          ruler.property("__axis", null).attr("data-orient", orient);
+        }
         if (this.type === "tree" && this.layout !== "circular") {
           ruler
             .attr("opacity", 1)
